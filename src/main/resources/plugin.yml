@@ -1,0 +1,4 @@
+name: BetterServerResourcepack
+version: '${project.version}'
+main: me.fisch37.betterresourcepack.BetterServerResourcepack
+api-version: '1.19'
