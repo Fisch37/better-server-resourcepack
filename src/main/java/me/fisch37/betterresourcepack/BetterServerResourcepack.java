@@ -36,7 +36,7 @@ public final class BetterServerResourcepack extends JavaPlugin {
     private YamlConfiguration loadConfig(){
         File path = new File(getDataFolder(),configName);
         if (!path.exists()){
-            path.mkdirs();
+            path.getParentFile().mkdirs();
             saveResource(configName,false);
         }
         return YamlConfiguration.loadConfiguration(path);
