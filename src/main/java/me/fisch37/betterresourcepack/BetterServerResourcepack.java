@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 public final class BetterServerResourcepack extends JavaPlugin {
-    private final static String configName = "betterresourcepack.yaml";
+    private final static String configName = "config.yaml";
+    private final static String hashCacheName = "pack.sha1";
     private YamlConfiguration config;
     private PackInfo packInfo;
 
