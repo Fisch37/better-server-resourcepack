@@ -1,5 +1,6 @@
 package me.fisch37.betterresourcepack;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ public class PackInfo {
     public PackInfo(YamlConfiguration config, boolean setHash) throws MalformedURLException, IOException {
         String urlString = config.getString("pack-uri");
         this.url = (urlString==null) ? null : new URL(urlString);
-        if (setHash) this.updateSha1();
+        if (setHash && this.url != null) this.updateSha1();
     }
 
 
@@ -46,11 +47,12 @@ public class PackInfo {
         return getSha1();
     }
 
-    private InputStream getPack() throws IOException {
+    public InputStream getPack() throws IOException {
         return this.getUrl().openStream();
     }
 
     private byte[] fetchSha1() throws IOException{
+        Bukkit.getLogger().info("Fetching resource pack hash");
         MessageDigest hashObject;
         try{
             hashObject = MessageDigest.getInstance("SHA-1");
@@ -60,14 +62,13 @@ public class PackInfo {
             // Is this good programming? No
             throw new RuntimeException("No sha1 algorithm found for this java implementation. How did we get here?",e);
         }
+        Bukkit.getLogger().config("Downloading pack from "+this.getUrl());
         InputStream packStream = this.getPack();
-        // Reading like this to save memory for potentially large packs
-        byte[] singleByte = new byte[1];
-        int bytesRead = 0;
-        while (bytesRead != -1){
-            bytesRead = packStream.read(singleByte);
-            hashObject.update(singleByte);
-        }
-        return hashObject.digest();
+        Bukkit.getLogger().config("Pack downloaded, assembling hash and exiting");
+        // Hash mismatch, Received data appears correct
+        byte[] data = packStream.readAllBytes();
+
+
+        return hashObject.digest(data);
     }
 }
