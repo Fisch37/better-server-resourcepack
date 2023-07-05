@@ -71,4 +71,8 @@ public class PackInfo {
 
         return hashObject.digest(data);
     }
+
+    public boolean isConfigured(){
+        return this.getUrl() != null;
+    }
 }
