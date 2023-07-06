@@ -1,6 +1,9 @@
 package me.fisch37.betterresourcepack;
 
+import me.fisch37.betterresourcepack.commands.PackCommand;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -58,6 +61,11 @@ public final class BetterServerResourcepack extends JavaPlugin {
             }
         }
         getServer().getPluginManager().registerEvents(new JoinHandler(this.packInfo),this);
+
+        PluginCommand command = getCommand("pack");
+        TabExecutor executor = new PackCommand(this.packInfo,this);
+        command.setExecutor(executor);
+        command.setTabCompleter(executor);
     }
 
     @Override

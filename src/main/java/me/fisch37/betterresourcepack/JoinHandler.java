@@ -9,6 +9,7 @@ public class JoinHandler implements Listener {
     private final PackInfo packInfo;
 
     public JoinHandler(PackInfo packInfo){
+        super();
         this.packInfo = packInfo;
     }
 
