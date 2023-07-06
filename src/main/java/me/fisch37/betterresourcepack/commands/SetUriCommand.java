@@ -21,17 +21,17 @@ public class SetUriCommand implements PermissibleCommand, CommandWithHelp{
 
     @Override
     public String getUsage() {
-        return "/pack set <url>";
+        return "/pack set [<url>]";
     }
 
     @Override
     public String getPurpose() {
-        return "Set the server resourcepack url";
+        return "Set/reset the server resourcepack url";
     }
 
     @Override
     public String getPurposeLong() {
-        return "Set the server resourcepack url. Note that this does not reload the resourcepack.";
+        return "Set/reset the server resourcepack url. Note that this does not reload the resourcepack.";
     }
 
     @Override
@@ -41,12 +41,12 @@ public class SetUriCommand implements PermissibleCommand, CommandWithHelp{
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length != 1){
-            sendMessage(sender,ChatColor.RED+"Invalid number of arguments. Expected 1, got "+args.length);
+        if (args.length > 1){
+            sendMessage(sender,ChatColor.RED+"Invalid number of arguments. Expected 0-1, got "+args.length);
             return false;
         }
         try {
-            this.packInfo.setUrl(new URL(args[0]));
+            this.packInfo.setUrl((args.length == 1) ? new URL(args[0]) : null);
             this.packInfo.saveURL();
         } catch (java.net.MalformedURLException e){
             sendMessage(sender,ChatColor.RED+"Invalid URL format.");

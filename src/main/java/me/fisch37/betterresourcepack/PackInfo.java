@@ -38,7 +38,7 @@ public class PackInfo {
 
     public void setUrl(URL url) {
         this.url = url;
-        this.plugin.getConfig().set("pack-uri",url.toString());
+        this.plugin.getConfig().set("pack-uri",url == null ? null : url.toString());
     }
 
     public synchronized byte[] getSha1() {
