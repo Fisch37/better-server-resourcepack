@@ -1,6 +1,5 @@
 # Configuration for BetterServerResourcepack
 pack-uri:
-update-hash-on-reload: false
 # Always update the resource pack hash at startup
 # This setting makes sense for small resourcepacks, but can significantly increase boot time for larger packs.
 force-hash-update-on-start: true
