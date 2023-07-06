@@ -42,11 +42,11 @@ public class PackInfo {
         this.plugin.getConfig().set("pack-uri",url.toString());
     }
 
-    public byte[] getSha1() {
+    public synchronized byte[] getSha1() {
         return sha1;
     }
 
-    public void setSha1(byte[] sha1) {
+    public synchronized void setSha1(byte[] sha1) {
         this.sha1 = sha1;
     }
 
@@ -54,7 +54,7 @@ public class PackInfo {
         return Arrays.equals(this.fetchSha1(),this.getSha1());
     }
 
-    public byte[] updateSha1() throws IOException{
+    public synchronized byte[] updateSha1() throws IOException{
         this.setSha1(this.fetchSha1());
         return getSha1();
     }
