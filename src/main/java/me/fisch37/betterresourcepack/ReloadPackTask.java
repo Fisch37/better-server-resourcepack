@@ -28,7 +28,7 @@ public class ReloadPackTask extends BukkitRunnable {
         this.push = push;
     }
 
-    private class FetchTask extends BukkitRunnable{
+    private static class FetchTask extends BukkitRunnable{
         private final PackInfo packInfo;
         private Boolean isSuccessful;
 
