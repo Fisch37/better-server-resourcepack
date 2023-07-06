@@ -3,6 +3,8 @@ package me.fisch37.betterresourcepack;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -10,13 +12,22 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.HexFormat;
 
 public class PackInfo {
+    private final BetterServerResourcepack plugin;
+    private final File cachePath;
     private URL url;
     private byte[] sha1;
 
-    public PackInfo(YamlConfiguration config, boolean setHash) throws MalformedURLException, IOException {
-        String urlString = config.getString("pack-uri");
+    public PackInfo(
+            BetterServerResourcepack plugin,
+            boolean setHash,
+            File cachePath
+    ) throws MalformedURLException, IOException {
+        this.plugin = plugin;
+        this.cachePath = cachePath;
+        String urlString = this.plugin.getConfig().getString("pack-uri");
         this.url = (urlString==null) ? null : new URL(urlString);
         if (setHash && this.url != null) this.updateSha1();
     }
@@ -70,6 +81,16 @@ public class PackInfo {
 
 
         return hashObject.digest(data);
+    }
+
+    public void saveURL() throws IOException{
+        this.plugin.saveCustomConfig();
+    }
+    public void saveHash() throws IOException{
+        // No need to create parents, should already be handled by loadConfig
+        try (FileWriter hashWriter = new FileWriter(this.cachePath)) {
+            hashWriter.write(HexFormat.of().formatHex(this.getSha1()));
+        }
     }
 
     public boolean isConfigured(){

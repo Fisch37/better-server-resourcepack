@@ -11,6 +11,7 @@ import java.util.HexFormat;
 public final class BetterServerResourcepack extends JavaPlugin {
     private final static String configName = "config.yaml";
     private final static String hashCacheName = "pack.sha1";
+    private File configPath;
     private YamlConfiguration config;
     private PackInfo packInfo;
 
@@ -19,6 +20,7 @@ public final class BetterServerResourcepack extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        this.configPath = new File(getDataFolder(),configName);
         this.config = loadConfig();
         boolean forceHashUpdate = this.config.getBoolean("force-hash-update-on-start");
         File hashCache = new File(getDataFolder(), hashCacheName);
@@ -27,7 +29,7 @@ public final class BetterServerResourcepack extends JavaPlugin {
 
         boolean loadSuccessful = false;
         try{
-            this.packInfo = new PackInfo(this.config,shouldUpdateHash);
+            this.packInfo = new PackInfo(this,shouldUpdateHash,hashCache);
             loadSuccessful = true;
         } catch (MalformedURLException e){
             logger.warning("[BetterServerResourcepack] Resourcepack URL has an invalid format");
@@ -36,9 +38,8 @@ public final class BetterServerResourcepack extends JavaPlugin {
         }
         if (loadSuccessful && this.packInfo.isConfigured()) {
             if (shouldUpdateHash) {
-                // No need to create parents, should already be handled by loadConfig
-                try (FileWriter hashWriter = new FileWriter(hashCache)) {
-                    hashWriter.write(hexFormatter.formatHex(this.packInfo.getSha1()));
+                try {
+                    this.packInfo.saveHash();
                 } catch (IOException e) {
                     logger.warning("[BetterServerResourcepack] Could not update cached hash!");
                 }
@@ -66,15 +67,22 @@ public final class BetterServerResourcepack extends JavaPlugin {
 
 
     private YamlConfiguration loadConfig(){
-        File path = new File(getDataFolder(),configName);
-        if (!path.exists()){
-            path.getParentFile().mkdirs();
+        if (!this.configPath.exists()){
+            this.configPath.getParentFile().mkdirs();
             saveResource(configName,false);
         }
-        return YamlConfiguration.loadConfiguration(path);
+        return YamlConfiguration.loadConfiguration(this.configPath);
     }
 
     public YamlConfiguration getConfig(){
         return this.config;
+    }
+
+    public File getConfigPath(){
+        return this.configPath;
+    }
+
+    public void saveCustomConfig() throws IOException{
+        this.config.save(this.getConfigPath());
     }
 }
