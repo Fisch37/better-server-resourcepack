@@ -71,9 +71,7 @@ public class ReloadPackTask extends BukkitRunnable {
         } else if (saveHash()){
             sendToAuthor("Updated pack hash!");
             Bukkit.getLogger().info("[BSP] Updated pack hash");
-            if (this.push && this.packInfo.isConfigured()) {
-                pushPackToPlayers();
-            } else if (this.push) sendToAuthor("Note that no pack is specified, cannot push anything.");
+            if (this.push) pushPackToPlayers();
         }
         cancel();
     }

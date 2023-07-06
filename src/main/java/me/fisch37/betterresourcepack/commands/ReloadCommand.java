@@ -55,6 +55,10 @@ public class ReloadCommand implements PermissibleCommand, CommandWithHelp{
             return false;
         }
         boolean push = args.length == 1;
+        if (!this.packInfo.isConfigured()){
+            sendMessage(sender, ChatColor.RED+"Cannot reload. No resource pack is configured.");
+            return true;
+        }
         sendMessage(sender,"Reloading resource pack. This may take a while.");
         new ReloadPackTask(
                 this.plugin,
