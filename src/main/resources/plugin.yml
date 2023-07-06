@@ -2,3 +2,24 @@ name: BetterServerResourcepack
 version: '${project.version}'
 main: me.fisch37.betterresourcepack.BetterServerResourcepack
 api-version: '1.19'
+description: Replaces the server resourcepack system with a more convenient implementation.
+
+commands:
+  pack:
+    description: Management command for BetterServerResourcepack
+    permission: betterserverpack
+    usage: /<command> [set|reload] [<url>]
+
+permissions:
+  betterserverpack:
+    description: Top-level permission for /pack
+    default: op
+  betterserverpack.set:
+    description: Allows the player to set the resourcepack url
+    default: op
+  betterserverpack.reload:
+    description: Allows the player to reload the resourcepack (updates the hash)
+    default: op
+  betterserverpack.help:
+    description: Allows listing the help for BetterServerResourcepack commands
+    default: op
