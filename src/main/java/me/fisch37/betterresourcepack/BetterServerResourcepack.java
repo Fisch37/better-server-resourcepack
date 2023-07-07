@@ -23,40 +23,20 @@ public final class BetterServerResourcepack extends JavaPlugin {
         boolean forceHashUpdate = this.getConfig().getBoolean("force-hash-update-on-start");
         File hashCache = new File(getDataFolder(), hashCacheName);
         boolean shouldUpdateHash = forceHashUpdate || !hashCache.exists();
-        final HexFormat hexFormatter = HexFormat.of();
 
-        boolean loadSuccessful = false;
-        try{
-            this.packInfo = new PackInfo(this,shouldUpdateHash,hashCache);
-            loadSuccessful = true;
-        } catch (MalformedURLException e){
-            logger.warning("[BetterServerResourcepack] Resourcepack URL has an invalid format");
-        } catch (IOException e){
-            logger.warning("[BetterServerResourcepack] Resourepack could not be accessed. This plugin will not work unless you reload it");
-        }
+        boolean loadSuccessful = this.loadPackInfo(shouldUpdateHash,hashCache);
+        // Cache Save/Loading
         if (loadSuccessful && this.packInfo.isConfigured()) {
             if (shouldUpdateHash) {
                 try {
                     this.packInfo.saveHash();
                 } catch (IOException e) {
-                    logger.warning("[BetterServerResourcepack] Could not update cached hash!");
+                    logger.warning("[BSP] Could not update cached hash!");
                 }
-            } else{
-                try (BufferedReader hashReader = new BufferedReader(new FileReader(hashCache))){
-                    String hexHash = hashReader.readLine();
-                    this.packInfo.setSha1(hexFormatter.parseHex(hexHash));
-                } catch (java.io.FileNotFoundException e){
-                    // I have done stuff like this in other parts of this plugin as well.
-                    // Basically: We don't ever want this error to occur.
-                    // => If it occurs, it's real bad and should appear as a full-blown error.
-                    throw new RuntimeException(e);
-                } catch (IOException e){
-                    logger.severe("Could not load cached hash! The plugin will not work unless you reload it.");
-                }
-            }
+            } else this.readFromCache(hashCache);
         }
-        getServer().getPluginManager().registerEvents(new JoinHandler(this.packInfo),this);
 
+        getServer().getPluginManager().registerEvents(new JoinHandler(this.packInfo),this);
         PluginCommand command = getCommand("pack");
         if (command == null){
             logger.severe("[BSP] Could not find command /pack. Cancelling activation");
@@ -65,6 +45,32 @@ public final class BetterServerResourcepack extends JavaPlugin {
         TabExecutor executor = new PackCommand(this.packInfo,this);
         command.setExecutor(executor);
         command.setTabCompleter(executor);
+    }
+
+    private void readFromCache(File cache){
+        try (BufferedReader hashReader = new BufferedReader(new FileReader(cache))){
+            String hexHash = hashReader.readLine();
+            this.packInfo.setSha1(HexFormat.of().parseHex(hexHash));
+        } catch (java.io.FileNotFoundException e){
+            // I have done stuff like this in other parts of this plugin as well.
+            // Basically: We don't ever want this error to occur.
+            // => If it occurs, it's real bad and should appear as a full-blown error.
+            throw new RuntimeException(e);
+        } catch (IOException e){
+            logger.severe("Could not load cached hash! The plugin will not work unless you reload it.");
+        }
+    }
+
+    private boolean loadPackInfo(boolean forceUpdate, File cache){
+        try{
+            this.packInfo = new PackInfo(this,forceUpdate,cache);
+            return true;
+        } catch (MalformedURLException e){
+            logger.warning("[BSP] Resourcepack URL has an invalid format");
+        } catch (IOException e){
+            logger.warning("[BSP] Resourepack could not be accessed. This plugin will not work unless you reload it");
+        }
+        return false;
     }
 
     @Override
