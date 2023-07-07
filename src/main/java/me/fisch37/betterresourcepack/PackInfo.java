@@ -10,7 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.HexFormat;
 
 public class PackInfo {
@@ -54,13 +53,8 @@ public class PackInfo {
         this.sha1 = sha1;
     }
 
-    public boolean verifySha1() throws IOException{
-        return Arrays.equals(this.fetchSha1(),this.getSha1());
-    }
-
-    public synchronized byte[] updateSha1() throws IOException{
+    public synchronized void updateSha1() throws IOException{
         this.setSha1(this.fetchSha1());
-        return getSha1();
     }
 
     public InputStream getPack() throws IOException {
