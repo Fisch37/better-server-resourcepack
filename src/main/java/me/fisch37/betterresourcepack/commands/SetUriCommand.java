@@ -1,7 +1,6 @@
 package me.fisch37.betterresourcepack.commands;
 
 import me.fisch37.betterresourcepack.PackInfo;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
