@@ -18,6 +18,7 @@ public final class BetterServerResourcepack extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        _CompatRenameConfig();
         // Plugin startup logic
         saveDefaultConfig();
         boolean forceHashUpdate = this.getConfig().getBoolean("force-hash-update-on-start");
@@ -76,5 +77,22 @@ public final class BetterServerResourcepack extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    /*
+     * Compatibility method.
+     * Renames an existing config.yaml to config.yml if config.yml doesn't exist.
+     */
+    private void _CompatRenameConfig(){
+        File old_config_loc = new File(getDataFolder(), "config.yaml");
+        File new_config_loc = new File(getDataFolder(), "config.yml");
+        boolean renameSuccess = false;
+        logger.info("[BSP] Compat 0.1->0.2: Attempting to rename config.");
+        try {
+            if (old_config_loc.exists() && !new_config_loc.exists())
+                renameSuccess = old_config_loc.renameTo(new_config_loc);
+        } catch (SecurityException e){}
+        if (!renameSuccess)
+            logger.warning("[BSP] Compat: Could not rename config. ALl your configuration has been reset!");
     }
 }
