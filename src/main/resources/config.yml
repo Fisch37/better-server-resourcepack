@@ -3,3 +3,6 @@ pack-uri:
 # Always update the resource pack hash at startup
 # This setting makes sense for small resourcepacks, but can significantly increase boot time for larger packs.
 force-hash-update-on-start: true
+# Size of the buffer used in calculating the pack hash.
+# Higher values may increase calculation speeds at the expense of memory consumption.
+pack-buffer-size: 8192

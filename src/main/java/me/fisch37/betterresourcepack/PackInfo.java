@@ -75,11 +75,15 @@ public class PackInfo {
         Bukkit.getLogger().config("Downloading pack from "+this.getUrl());
         InputStream packStream = this.getPack();
         Bukkit.getLogger().config("Pack downloaded, assembling hash and exiting");
-        // Hash mismatch, Received data appears correct
-        byte[] data = packStream.readAllBytes();
+        byte[] packBuffer = new byte[this.plugin.getConfig().getInt("pack-buffer-size",8192)];
+        int lastReadSize = 0;
+        while (lastReadSize != -1){
+            lastReadSize = packStream.read(packBuffer);
+            hashObject.update(packBuffer);
+        }
 
 
-        return hashObject.digest(data);
+        return hashObject.digest();
     }
 
     public void saveURL(){
