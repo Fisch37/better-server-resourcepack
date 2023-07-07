@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -13,9 +14,9 @@ public class SubcommandGroup implements TabExecutor {
 
     @Override
     public boolean onCommand(
-            CommandSender sender,
-            Command command,
-            String label,
+            @NotNull CommandSender sender,
+            @NotNull Command command,
+            @NotNull String label,
             String[] args
     ) {
         if (args.length == 0) return false;
@@ -44,9 +45,9 @@ public class SubcommandGroup implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(
-            CommandSender sender,
-            Command command,
-            String label,
+            @NotNull CommandSender sender,
+            @NotNull Command command,
+            @NotNull String label,
             String[] args
     ) {
         if (args.length == 1){

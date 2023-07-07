@@ -6,6 +6,8 @@ import me.fisch37.betterresourcepack.ReloadPackTask;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,12 @@ public class ReloadCommand implements PermissibleCommand, CommandWithHelp{
 
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(
+            @NotNull CommandSender sender,
+            @NotNull Command command,
+            @NotNull String label,
+            String[] args
+    ) {
         if (args.length > 1){
             sendMessage(sender, ChatColor.RED+"Too many arguments supplied. Expected 0-1, got "+args.length);
             return false;
@@ -73,7 +80,12 @@ public class ReloadCommand implements PermissibleCommand, CommandWithHelp{
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> onTabComplete(
+            @NotNull CommandSender sender,
+            @NotNull Command command,
+            @NotNull String label,
+            String[] args
+    ) {
         if (args.length == 1) return List.of("push");
         return new ArrayList<>();
     }

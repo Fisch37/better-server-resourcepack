@@ -2,10 +2,11 @@ package me.fisch37.betterresourcepack.commands;
 
 import org.bukkit.command.TabExecutor;
 
+@SuppressWarnings("unused")
 public interface CommandWithHelp extends TabExecutor {
-    public String getUsage();
+    String getUsage();
 
-    public String getPurpose();
+    String getPurpose();
 
-    public String getPurposeLong();
+    String getPurposeLong();
 }

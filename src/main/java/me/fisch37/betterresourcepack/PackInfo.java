@@ -19,6 +19,7 @@ public class PackInfo {
     private URL url;
     private byte[] sha1;
 
+    @SuppressWarnings("DuplicateThrows")
     public PackInfo(
             BetterServerResourcepack plugin,
             boolean setHash,
@@ -27,6 +28,10 @@ public class PackInfo {
         this.plugin = plugin;
         this.cachePath = cachePath;
         String urlString = this.plugin.getConfig().getString("pack-uri");
+        if (urlString == null){
+            Bukkit.getLogger().warning("[BSP] Missing config key \"pack-uri\"");
+            urlString = "";
+        }
         this.url = (urlString.equals("")) ? null : new URL(urlString);
         if (setHash && this.url != null) this.updateSha1();
     }
@@ -83,8 +88,8 @@ public class PackInfo {
         return hashObject.digest(data);
     }
 
-    public void saveURL() throws IOException{
-        this.plugin.saveCustomConfig();
+    public void saveURL(){
+        this.plugin.saveConfig();
     }
     public void saveHash() throws IOException{
         // No need to create parents, should already be handled by loadConfig
