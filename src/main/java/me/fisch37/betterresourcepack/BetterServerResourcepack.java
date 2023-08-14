@@ -68,8 +68,6 @@ public final class BetterServerResourcepack extends JavaPlugin {
             return true;
         } catch (MalformedURLException e){
             logger.warning("[BSP] Resourcepack URL has an invalid format");
-        } catch (IOException e){
-            logger.warning("[BSP] Resourepack could not be accessed. This plugin will not work unless you reload it");
         }
         return false;
     }

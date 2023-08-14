@@ -1,6 +1,7 @@
 package me.fisch37.betterresourcepack;
 
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -18,12 +19,11 @@ public class PackInfo {
     private URL url;
     private byte[] sha1;
 
-    @SuppressWarnings("DuplicateThrows")
     public PackInfo(
             BetterServerResourcepack plugin,
             boolean setHash,
             File cachePath
-    ) throws MalformedURLException, IOException {
+    ) throws MalformedURLException {
         this.plugin = plugin;
         this.cachePath = cachePath;
         String urlString = this.plugin.getConfig().getString("pack-uri");
@@ -31,8 +31,15 @@ public class PackInfo {
             Bukkit.getLogger().warning("[BSP] Missing config key \"pack-uri\"");
             urlString = "";
         }
-        this.url = (urlString.equals("")) ? null : new URL(urlString);
-        if (setHash && this.url != null) this.updateSha1();
+        this.url = (urlString.isEmpty()) ? null : new URL(urlString);
+        if (setHash && this.url != null){
+            try{
+                this.updateSha1();
+            } catch (IOException e){
+                Bukkit.getLogger()
+                        .warning("[BSP] Resourcepack inacessible. You will need to reload the hash using /pack reload");
+            }
+        }
     }
 
 
@@ -97,6 +104,6 @@ public class PackInfo {
     }
 
     public boolean isConfigured(){
-        return this.getUrl() != null;
+        return this.getUrl() != null && this.getSha1() != null;
     }
 }

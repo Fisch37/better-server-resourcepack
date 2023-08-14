@@ -15,7 +15,7 @@ public class JoinHandler implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerJoin(PlayerJoinEvent event){
-        if (this.packInfo.getUrl() == null) return;
+        if (!this.packInfo.isConfigured()) return;
         event.getPlayer().setResourcePack(
                 this.packInfo.getUrl().toString(),
                 this.packInfo.getSha1()
