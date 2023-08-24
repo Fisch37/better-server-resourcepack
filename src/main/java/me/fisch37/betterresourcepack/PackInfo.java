@@ -12,6 +12,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
+import java.security.DigestInputStream;
 
 public class PackInfo {
     private final BetterServerResourcepack plugin;
@@ -82,14 +83,8 @@ public class PackInfo {
         Bukkit.getLogger().config("Downloading pack from "+this.getUrl());
         InputStream packStream = this.getPack();
         Bukkit.getLogger().config("Pack downloaded, assembling hash and exiting");
-        byte[] packBuffer = new byte[this.plugin.getConfig().getInt("pack-buffer-size",8192)];
-        int lastReadSize = 0;
-        while (lastReadSize != -1){
-            lastReadSize = packStream.read(packBuffer);
-            hashObject.update(packBuffer);
-        }
-
-
+        DigestInputStream hashStream = new DigestInputStream(packStream, hashObject);
+        hashStream.readAllBytes();
         return hashObject.digest();
     }
 
