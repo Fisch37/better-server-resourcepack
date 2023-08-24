@@ -37,7 +37,7 @@ public class PackInfo {
                 this.updateSha1();
             } catch (IOException e){
                 Bukkit.getLogger()
-                        .warning("[BSP] Resourcepack inacessible. You will need to reload the hash using /pack reload");
+                        .warning("[BSP] Resourcepack inaccessible. You will need to reload the hash using /pack reload");
             }
         }
     }
